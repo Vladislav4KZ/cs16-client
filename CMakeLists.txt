@@ -57,6 +57,7 @@ if(BUILD_MAINUI)
 	add_subdirectory(3rdparty/mainui_cpp)
 endif()
 
+include(YaPBGraphDownload)
 include(GenerateExtras)
 
 if(WIN32)
