@@ -1,6 +1,6 @@
 [submodule "3rdparty/yapb"]
 	path = 3rdparty/yapb
-	url = https://github.com/yapb/yapb
+	url = https://github.com/Vladislav4KZ/yapb
 [submodule "3rdparty/mainui_cpp"]
 	path = 3rdparty/mainui_cpp
 	url = https://github.com/Vladislav4KZ/mainui_cpp
