@@ -5,7 +5,7 @@ message("-- Starting downloading the YaPB Graphs")
 set(DATABASE_URL "https://yapb.jeefo.net/graph/")
 
 # Specify the path to the file with the maps list
-set(LIST_FILE "scripts/official_maps.lst")
+set(LIST_FILE "${CMAKE_CURRENT_SOURCE_DIR}/scripts/official_maps.lst")
 
 # Checking the presence of the list file
 if (NOT EXISTS "${LIST_FILE}")
