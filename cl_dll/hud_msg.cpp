@@ -28,6 +28,7 @@
 #include "GameStudioModelRenderer.h"
 #include "com_weapons.h"
 #include "util.h"
+#include "cbase.h"
 
 #include <cstring>
 
