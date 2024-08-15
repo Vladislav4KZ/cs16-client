@@ -56,6 +56,14 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	// reset concussion effect
 	m_iConcussionEffect = 0;
 
+	edict_t *pEntity = UTIL_FindEntityByClassname(NULL, "func_vip_safetyzone");
+	if (pEntity != NULL) {
+    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 1 );
+	}
+	else {
+    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 0 );
+	}
+
 	char szMapPrefix[64] = { 0 };
 	char szMapName[64] = { 0 };
 	const char *szFullMapName = gEngfuncs.pfnGetLevelName() + 5;

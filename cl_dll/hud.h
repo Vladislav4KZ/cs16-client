@@ -989,6 +989,7 @@ public:
 	cvar_t *cscl_currentmap;
 	cvar_t *cscl_mapprefix;
 	cvar_t *cscl_currentmoney;
+	cvar_t *cscl_vipassassinationmap;
 
 	HSPRITE m_hGasPuff;
 
