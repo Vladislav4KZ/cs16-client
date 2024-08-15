@@ -56,12 +56,18 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	// reset concussion effect
 	m_iConcussionEffect = 0;
 
-	char szMapPrefix[4] = { 0 };
+	char szMapPrefix[64] = { 0 };
 	const char *szFullMapName = gEngfuncs.pfnGetLevelName();
 	if ( szFullMapName && szFullMapName[0] )
 	{
-    	strncpy( szMapPrefix, szFullMapName + 5, 3 );
-    	szMapPrefix[3] = '\0';
+    	int i = 0;
+    	while (szFullMapName[i + 5] != '_' && szFullMapName[i + 5] != '\0' && i < sizeof(szMapPrefix) - 1)
+    	{
+        	szMapPrefix[i] = szFullMapName[i];
+        	i++;
+    	}
+    	szMapPrefix[i] = '_';
+    	szMapPrefix[i + 1] = '\0';
 	}
 	gEngfuncs.Cvar_Set( gHUD.cscl_mapprefix->name, szMapPrefix );
 
