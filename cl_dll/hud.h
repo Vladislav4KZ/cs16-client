@@ -987,7 +987,7 @@ public:
 #endif
 	cvar_t *hud_scale;
 	cvar_t *cscl_currentmoney;
-	cvar_t *cscl_currentmap;
+	cvar_t *cscl_mapprefix;
 
 	HSPRITE m_hGasPuff;
 
