@@ -57,7 +57,8 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	// reset concussion effect
 	m_iConcussionEffect = 0;
 
-	edict_t *pEntity = UTIL_FindEntityByClassname(NULL, "func_vip_safetyzone");
+	CBaseEntity *pBaseEntity = UTIL_FindEntityByClassname(NULL, "func_vip_safetyzone");
+	edict_t *pEntity = pBaseEntity ? pBaseEntity->edict() : NULL;
 	if (pEntity != NULL) {
     	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 1 );
 	}
