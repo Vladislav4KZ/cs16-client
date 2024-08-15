@@ -27,6 +27,7 @@
 #include "StudioModelRenderer.h"
 #include "GameStudioModelRenderer.h"
 #include "com_weapons.h"
+#include "util.h"
 
 #include <cstring>
 
