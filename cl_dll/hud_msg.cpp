@@ -84,8 +84,8 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
     	szMapPrefix[i] = '_';
     	szMapPrefix[i + 1] = '\0';
 	}
-	gEngfuncs.Cvar_Set( gHUD.cscl_currentmap->name, szMapPrefix );
-	gEngfuncs.Cvar_Set( gHUD.cscl_mapprefix->name, szMapName );
+	gEngfuncs.Cvar_Set( gHUD.cscl_currentmap->name, szMapName);
+	gEngfuncs.Cvar_Set( gHUD.cscl_mapprefix->name, szMapPrefix );
 
 	return 1;
 }
