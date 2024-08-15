@@ -27,8 +27,8 @@
 #include "StudioModelRenderer.h"
 #include "GameStudioModelRenderer.h"
 #include "com_weapons.h"
-#include "util.h"
-#include "cbase.h"
+//#include "util.h"
+//#include "cbase.h"
 
 #include <cstring>
 
@@ -58,14 +58,14 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	// reset concussion effect
 	m_iConcussionEffect = 0;
 
-	CBaseEntity *pBaseEntity = UTIL_FindEntityByClassname(NULL, "func_vip_safetyzone");
-	edict_t *pEntity = pBaseEntity ? pBaseEntity->edict() : NULL;
-	if (pEntity != NULL) {
-    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 1 );
-	}
-	else {
-    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 0 );
-	}
+//	CBaseEntity *pBaseEntity = UTIL_FindEntityByClassname(NULL, "func_vip_safetyzone");
+//	edict_t *pEntity = pBaseEntity ? pBaseEntity->edict() : NULL;
+//	if (pEntity != NULL) {
+//    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 1 );
+//	}
+//	else {
+//    	gEngfuncs.Cvar_SetValue( gHUD.cscl_vipassassinationmap->name, 0 );
+//	}
 
 	char szMapPrefix[64] = { 0 };
 	char szMapName[64] = { 0 };
