@@ -986,8 +986,9 @@ public:
 	cvar_t *cl_android_force_defaults;
 #endif
 	cvar_t *hud_scale;
-	cvar_t *cscl_currentmoney;
+	cvar_t *cscl_currentmap;
 	cvar_t *cscl_mapprefix;
+	cvar_t *cscl_currentmoney;
 
 	HSPRITE m_hGasPuff;
 
