@@ -70,6 +70,7 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 	if ( szFullMapName && szFullMapName[0] )
 	{
 		strncpy( szMapName, szFullMapName, sizeof( szMapName ) );
+		szMapName[strlen( szMapName ) - 4] = '\0';
 
     	int i = 0;
     	while (szFullMapName[i] != '_' && szFullMapName[i] != '\0' && i < sizeof(szMapPrefix) - 1)
