@@ -58,22 +58,22 @@ int CHud :: MsgFunc_ResetHUD(const char *pszName, int iSize, void *pbuf )
 
 	char szMapPrefix[64] = { 0 };
 	char szMapName[64] = { 0 };
-	const char *szFullMapName = gEngfuncs.pfnGetLevelName() + 5;
+	const char *szFullMapName = gEngfuncs.pfnGetLevelName();
 	if ( szFullMapName && szFullMapName[0] )
 	{
-		strncpy( szMapName, szFullMapName, sizeof( szMapName ) );
+		strncpy( szMapName, szFullMapName + 5, sizeof( szMapName ) );
 		szMapName[strlen( szMapName ) - 4] = '\0';
 
-    	int i = 0;
-    	while (szFullMapName[i] != '_' && szFullMapName[i] != '\0' && i < sizeof(szMapPrefix) - 1)
-    	{
-        	szMapPrefix[i] = szFullMapName[i];
-        	i++;
-    	}
-    	szMapPrefix[i] = '_';
-    	szMapPrefix[i + 1] = '\0';
+		int i = 0;
+		while ( szMapName[i] != '_' && szMapName[i] != '\0' && i < sizeof( szMapPrefix ) - 1 )
+		{
+			szMapPrefix[i] = szMapName[i];
+			i++;
+		}
+		szMapPrefix[i] = '_';
+		szMapPrefix[i + 1] = '\0';
 	}
-	gEngfuncs.Cvar_Set( gHUD.cscl_currentmap->name, szMapName);
+	gEngfuncs.Cvar_Set( gHUD.cscl_currentmap->name, szMapName );
 	gEngfuncs.Cvar_Set( gHUD.cscl_mapprefix->name, szMapPrefix );
 
 	return 1;
