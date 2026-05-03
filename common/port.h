@@ -43,24 +43,57 @@ GNU General Public License for more details.
 
     #ifdef __ANDROID__
 		#define XASH_THREADS
-		#ifdef LOAD_HARDFP
-			#define MENUDLL "libmenu_hardfp.so"
-			#define CLIENTDLL "libclient_hardfp.so"
-			#define SERVERDLL "libserver_hardfp.so"
-		#else
-			#define MENUDLL "libmenu.so"
-			#define CLIENTDLL "libclient.so"
-			#define SERVERDLL "libserver.so"
-		#endif
-		#define GAMEPATH "/sdcard/xash"
+
+        #define ANDROID_LIB_PLATFORM "android"
+
+        #if defined(__aarch64__) || defined(_M_ARM64)
+            #define ANDROID_LIB_ARCH "arm64"
+        #elif defined(__x86_64__) || defined(_M_X64)
+            #define ANDROID_LIB_ARCH "amd64"
+        #elif defined(__i386__) || defined(_M_IX86)
+            #define ANDROID_LIB_ARCH "i386"
+        #elif defined(__arm__) || defined(_M_ARM)
+            #if defined(__ARM_ARCH_8__) || (defined(__ARM_ARCH) && __ARM_ARCH == 8)
+                #define ANDROID_LIB_CPU "armv8_32"
+            #elif defined(__ARM_ARCH_7__) || (defined(__ARM_ARCH) && __ARM_ARCH == 7)
+                #define ANDROID_LIB_CPU "armv7"
+            #elif defined(__ARM_ARCH_6__) || (defined(__ARM_ARCH) && __ARM_ARCH == 6)
+                #define ANDROID_LIB_CPU "armv6"
+            #elif defined(__ARM_ARCH_5__) || (defined(__ARM_ARCH) && __ARM_ARCH == 5)
+                #define ANDROID_LIB_CPU "armv5"
+            #elif defined(__ARM_ARCH_4__) || (defined(__ARM_ARCH) && __ARM_ARCH == 4)
+                #define ANDROID_LIB_CPU "armv4"
+            #else
+                #define ANDROID_LIB_CPU "arm"
+            #endif
+
+            #if defined(__SOFTFP__) || (defined(__ARM_PCS_VFP) && __ARM_PCS_VFP == 0)
+                #define ANDROID_LIB_FPU "l"
+            #else
+                #define ANDROID_LIB_FPU "hf"
+            #endif
+
+            #define ANDROID_LIB_ARCH ANDROID_LIB_CPU ANDROID_LIB_FPU
+        #endif
+
+        #ifdef ANDROID_LIB_ARCH
+            #define ANDROID_LIB_POSTFIX "_" ANDROID_LIB_PLATFORM "_" ANDROID_LIB_ARCH
+        #else
+            #define ANDROID_LIB_POSTFIX "_" ANDROID_LIB_PLATFORM
+        #endif
+
+        #define MENUDLL "libmenu" ANDROID_LIB_POSTFIX "." OS_LIB_EXT
+        #define CLIENTDLL "libclient" ANDROID_LIB_POSTFIX "." OS_LIB_EXT
+        #define SERVERDLL "libserver" ANDROID_LIB_POSTFIX "." OS_LIB_EXT
+        #define GAMEPATH "/sdcard/xash"
     #else
-		#define MENUDLL "libxashmenu." OS_LIB_EXT
-		#define CLIENTDLL "client." OS_LIB_EXT
-		#ifdef PANDORA
-			#define SERVERDLL "hl." OS_LIB_EXT
-			#define LIBPATH "."
-			#define GAMEPATH "."
-		#endif
+        #define MENUDLL "libxashmenu." OS_LIB_EXT
+        #define CLIENTDLL "client." OS_LIB_EXT
+        #ifdef PANDORA
+            #define SERVERDLL "hl." OS_LIB_EXT
+            #define LIBPATH "."
+            #define GAMEPATH "."
+        #endif
     #endif
 
 	#define VGUI_SUPPORT_DLL "libvgui_support." OS_LIB_EXT
@@ -93,7 +126,7 @@ GNU General Public License for more details.
     typedef long int	    LONG;
     typedef unsigned long int   ULONG;
     typedef long	    WPARAM;
-    typedef unsigned int    LPARAM;
+	typedef unsigned int    LPARAM;
 
     typedef void* HANDLE;
     typedef void* HMODULE;
