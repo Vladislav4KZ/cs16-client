@@ -26,10 +26,11 @@
 #include "pm_shared.h"
 
 #include <string.h>
-#include "interface.h" // not used here
+#include "interface.h"
 #include "render_api.h"
 #include "mobility_int.h"
 #include "vgui_parser.h"
+#include "cl_dll/IGameMenuExports.h"
 
 cl_enginefunc_t		gEngfuncs  = { };
 render_api_t		gRenderAPI = { };
@@ -37,6 +38,46 @@ mobile_engfuncs_t	gMobileAPI = { };
 CHud gHUD;
 int g_iXash = 0; // indicates a buildnum
 int g_iMobileAPIVersion = 0;
+
+IGameMenuExports *g_pMenu = nullptr;
+
+static IGameMenuExports *GetNativeMenuExports( void )
+{
+	if( !g_iMobileAPIVersion || !gMobileAPI.pfnGetNativeObject )
+		return nullptr;
+
+	static const char *nativeNames[] =
+	{
+		"menu",
+		GAMEMENUEXPORTS_INTERFACE_VERSION,
+		"GameMenuExports",
+		"IGameMenuExports",
+		nullptr
+	};
+
+	for( int i = 0; nativeNames[i]; ++i )
+	{
+		void *obj = gMobileAPI.pfnGetNativeObject( nativeNames[i] );
+		if( obj )
+			return static_cast<IGameMenuExports *>( obj );
+	}
+
+	return nullptr;
+}
+
+static void LoadMenuInterface( void )
+{
+	if( g_pMenu )
+		return;
+
+	g_pMenu = GetNativeMenuExports();
+	if( g_pMenu )
+		return;
+
+	CreateInterfaceFn menuFactory = Sys_GetFactory( "menu" );
+	if( menuFactory )
+		g_pMenu = static_cast<IGameMenuExports *>( menuFactory( GAMEMENUEXPORTS_INTERFACE_VERSION, NULL ) );
+}
 
 void InitInput (void);
 void Game_HookEvents( void );
@@ -205,8 +246,15 @@ the hud variables.
 
 void DLLEXPORT HUD_Init( void )
 {
+	LoadMenuInterface();
 	InitInput();
 	gHUD.Init();
+	
+	// Initialize menu if it's loaded
+	if( g_pMenu && !g_pMenu->Initialize( Sys_GetFactoryThis() ) )
+	{
+		gEngfuncs.Con_Printf( "Warning: Menu initialization failed\n" );
+	}
 	//Scheme_Init();
 }
 
@@ -258,7 +306,7 @@ Called at start and end of demos to restore to "non"HUD state.
 
 void DLLEXPORT HUD_Reset( void )
 {
-	gHUD.VidInit();
+	gHUD.Reset();
 }
 
 /*
@@ -274,6 +322,17 @@ void DLLEXPORT HUD_Frame( double time )
 #ifdef _CS16CLIENT_ENABLE_GSRC_SUPPORT
 	gEngfuncs.VGui_ViewportPaintBackground(HUD_GetRect());
 #endif
+
+	// Handle menu input and mouse movement
+	if( g_pMenu )
+	{
+		int x = 0, y = 0;
+		if( g_pMenu->IsActive() || g_pMenu->IsMainMenuActive() )
+		{
+			gEngfuncs.GetMousePosition( &x, &y );
+			g_pMenu->MouseMove( x, y );
+		}
+	}
 
 	GetClientVoice()->Frame( time );
 }
@@ -411,12 +470,16 @@ int DLLEXPORT HUD_MobilityInterface( mobile_engfuncs_t *mobileapi )
 
 extern "C" void DLLEXPORT HUD_ChatInputPosition( int *x, int *y )
 {
+	if ( x )
+		*x = 0;
+	if ( y )
+		*y = 0;
 }
 
 extern "C" int DLLEXPORT HUD_GetPlayerTeam(int iplayer)
 {
-	// original seems to return team_id, but I'm not sure it's even set somewhere
-	if ( iplayer <= MAX_PLAYERS )
+	// original seems to return team_id.
+	if ( iplayer >= 0 && iplayer < MAX_PLAYERS )
 		return g_PlayerExtraInfo[iplayer].teamnumber;
 	return 0;
 }

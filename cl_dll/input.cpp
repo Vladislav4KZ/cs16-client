@@ -26,9 +26,11 @@
 
 #include "vgui_parser.h"
 #include "com_weapons.h"
+#include "cl_dll/IGameMenuExports.h"
 
 extern int g_weaponselect;
 extern cl_enginefunc_t gEngfuncs;
+extern IGameMenuExports *g_pMenu;
 
 // Defined in pm_math.c
 float anglemod( float a );
@@ -365,6 +367,9 @@ Return 1 to allow engine to process the key, otherwise, act on it as needed
 */
 int DLLEXPORT HUD_Key_Event( int down, int keynum, const char *pszCurrentBinding )
 {
+	if( g_pMenu )
+		g_pMenu->Key( keynum, down );
+
 	return 1;
 }
 
