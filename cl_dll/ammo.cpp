@@ -944,27 +944,29 @@ void CHudAmmo::UserCmd_PrevWeapon(void)
 void CHudAmmo::UserCmd_Autobuy()
 {
 	char *afile = (char*)gEngfuncs.COM_LoadFile("autobuy.txt", 5, NULL);
-	char *pfile = afile;
-	char token[1024];
-	char szCmd[1024];
-	int remaining = 1023;
-
-	if( !pfile )
+	if( !afile )
 	{
 		ConsolePrint( "Can't open autobuy.txt file.\n" );
 		return;
 	}
 
-	strcpy(szCmd, "cl_setautobuy");
-	remaining -= sizeof( "cl_setautobuy" );
+	const int SZ = 1024;
+	char token[1024];
+	char szCmd[SZ];
+	char *pfile = afile;
 
-	while((pfile = gEngfuncs.COM_ParseFile( pfile, token )))
+	// initialize base command
+	strncpy( szCmd, "cl_setautobuy", SZ - 1 );
+	szCmd[SZ - 1] = '\0';
+
+	while( (pfile = gEngfuncs.COM_ParseFile( pfile, token )) )
 	{
-		// append space first
-		strncat(szCmd, " ", remaining);
-		strncat(szCmd, token, remaining - 1);
+		// ensure room for space, token and null
+		if( strlen( szCmd ) + 1 + strlen( token ) + 1 >= (size_t)SZ )
+			break;
 
-		remaining -= strlen( token ) - 1;
+		strncat( szCmd, " ", SZ - strlen( szCmd ) - 1 );
+		strncat( szCmd, token, SZ - strlen( szCmd ) - 1 );
 	}
 
 	gEngfuncs.pfnServerCmd( szCmd );
