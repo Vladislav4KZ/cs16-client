@@ -974,34 +974,41 @@ void CHudAmmo::UserCmd_Autobuy()
 void CHudAmmo::UserCmd_Rebuy()
 {
 	char *afile = (char*)gEngfuncs.COM_LoadFile("rebuy.txt", 5, NULL);
-	char *pfile = afile;
-	char token[1024];
-	char szCmd[1024];
-	int lastCh;
-	int remaining = 1023;
-
-	if( !pfile )
+	if( !afile )
 	{
 		ConsolePrint( "Can't open rebuy.txt file.\n" );
 		return;
 	}
 
-	// start with \"
-	strcpy(szCmd, "cl_setrebuy \"" );
-	remaining -= sizeof( "cl_setrebuy \"" );
+	const int SZ = 1024;
+	char token[1024];
+	char szCmd[SZ];
+	char *pfile = afile;
 
-	while((pfile = gEngfuncs.COM_ParseFile( pfile, token )))
+	// start command with opening quote
+	strncpy( szCmd, "cl_setrebuy \"", SZ - 1 );
+	szCmd[SZ-1] = '\0';
+
+	// append tokens with spaces
+	while( (pfile = gEngfuncs.COM_ParseFile( pfile, token )) )
 	{
-		strncat(szCmd, token, remaining );
-		remaining -= strlen( token );
+		// ensure we don't overflow: leave room for space, quote and null
+		if( strlen( szCmd ) + strlen( token ) + 3 >= (size_t)SZ )
+			break;
 
-		// append space after token
-		strncat(szCmd, " ", remaining );
-		remaining--;
+		strncat( szCmd, token, SZ - strlen( szCmd ) - 1 );
+		strncat( szCmd, " ", SZ - strlen( szCmd ) - 1 );
 	}
-	// replace last space with ", before terminator
-	lastCh = strlen(szCmd);
-	szCmd[lastCh] = '\"';
+
+	// remove trailing space if present, then append closing quote and terminator
+	size_t len = strlen( szCmd );
+	if( len > 0 && szCmd[len - 1] == ' ' )
+		szCmd[len - 1] = '"';
+	else if( len + 1 < (size_t)SZ )
+	{
+		szCmd[len] = '"';
+		szCmd[len + 1] = '\0';
+	}
 
 	gEngfuncs.pfnServerCmd( szCmd );
 	gEngfuncs.COM_FreeFile( afile );
