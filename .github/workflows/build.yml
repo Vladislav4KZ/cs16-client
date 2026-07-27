@@ -99,7 +99,10 @@ jobs:
           cmake --install .
         working-directory: build
       - name: Package
-        run: cpack -V --config CPackConfig.cmake
+        run: |
+          $zipPath = "${{ github.workspace }}/build/CS16Client-Windows-${{ matrix.arch }}.zip"
+          Compress-Archive -Path "${{ github.workspace }}/build/install/*" -DestinationPath $zipPath -Force
+          Write-Host "Package created at: $zipPath"
         working-directory: build
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
