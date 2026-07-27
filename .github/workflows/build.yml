@@ -87,6 +87,12 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - name: Prepare Environment (Disable Defender & Cleanup)
+        shell: pwsh
+        run: |
+          Add-MpPreference -ExclusionPath "${{ github.workspace }}"
+          taskkill /F /IM mspdbsrv.exe /T 2>$null
+          taskkill /F /IM python.exe /T 2>$null
       - name: Setup Visual Studio
         uses: ilammy/msvc-dev-cmd@v1
         with:
