@@ -76,6 +76,7 @@ jobs:
   windows:
     name: Windows
     runs-on: windows-latest
+    timeout-minutes: 15
     strategy:
       matrix:
         arch: [ 'x86', 'amd64' ]
@@ -91,11 +92,14 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: Configure
-        run: cmake --preset "win32-ci-${{ matrix.arch }}"
-      - name: Build and Package
+        run: cmake --preset "win32-ci-${{ matrix.arch }}" -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/build/install
+      - name: Build and Install
         run: |
           cmake --build .
-          cpack --config CPackConfig.cmake
+          cmake --install .
+        working-directory: build
+      - name: Package
+        run: cpack -V --config CPackConfig.cmake
         working-directory: build
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
