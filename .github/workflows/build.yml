@@ -82,9 +82,6 @@ jobs:
         arch: [ 'x86', 'amd64' ]
       fail-fast: false
     steps:
-      - name: Disable Windows Defender scanning for workspace
-        run: Add-MpPreference -ExclusionPath "${{ github.workspace }}"
-        shell: pwsh
       - name: Checkout sources
         uses: actions/checkout@v5
         with:
@@ -95,17 +92,11 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: Configure
-        run: cmake --preset "win32-ci-${{ matrix.arch }}" -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/build/install"
-      - name: Build and Install
+        run: cmake --preset "win32-ci-${{ matrix.arch }}"
+      - name: Build and Package
         run: |
-          cmake --build .
-          cmake --install .
-        working-directory: build
-      - name: Package
-        run: |
-          $zipPath = "${{ github.workspace }}/build/CS16Client-Windows-${{ matrix.arch }}.zip"
-          Compress-Archive -Path "${{ github.workspace }}/build/install/*" -DestinationPath $zipPath -Force
-          Write-Host "Package created at: $zipPath"
+          cmake --build . -v
+          cpack --config CPackConfig.cmake -V
         working-directory: build
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
