@@ -92,7 +92,7 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: Configure
-        run: cmake --preset "win32-ci-${{ matrix.arch }}" -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/build/install
+        run: cmake --preset "win32-ci-${{ matrix.arch }}" -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/build/install"
       - name: Build and Install
         run: |
           cmake --build .
