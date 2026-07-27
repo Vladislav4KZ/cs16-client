@@ -82,6 +82,9 @@ jobs:
         arch: [ 'x86', 'amd64' ]
       fail-fast: false
     steps:
+      - name: Disable Windows Defender scanning for workspace
+        run: Add-MpPreference -ExclusionPath "${{ github.workspace }}"
+        shell: pwsh
       - name: Checkout sources
         uses: actions/checkout@v5
         with:
