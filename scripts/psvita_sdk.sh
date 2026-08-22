@@ -2,10 +2,8 @@
 
 cd $GITHUB_WORKSPACE
 
-#export VITASDK=/usr/local/vitasdk
-
-# vdpm is a pacman frontend now, it asks for confirmation unless told otherwise
-export VDPM_NONINTERACTIVE=1
+export VITASDK=/usr/local/vitasdk
+export PATH=$VITASDK/bin:$PATH
 
 install_package()
 {
