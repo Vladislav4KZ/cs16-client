@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 project(cs16-client)
 
+if(MSVC)
+    # Allow parallel cl.exe processes to access the shared PDB file.
+    add_compile_options(/FS)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 include(LibraryNaming)
