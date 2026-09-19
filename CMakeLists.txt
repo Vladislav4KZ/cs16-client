@@ -78,7 +78,6 @@ if(BUILD_SERVER)
         # Must be applied after YaPB's own compiler options.
         target_compile_options(yapb PRIVATE
             /FS
-            /Z7
         )
     endif()
 
