@@ -73,10 +73,16 @@ if(BUILD_SERVER)
 	# 	INSTALL_COMMAND meson install -C build --destdir ${CMAKE_INSTALL_PREFIX}
 	# )
 	add_subdirectory(3rdparty/yapb)
-	set_target_postfix(yapb)
+
 	if(MSVC)
-    	target_compile_options(yapb PRIVATE /FS)
-	endif()
+        # Must be applied after YaPB's own compiler options.
+        target_compile_options(yapb PRIVATE
+            /FS
+            /Z7
+        )
+    endif()
+
+    set_target_postfix(yapb)
 
 	set(XASH_COMPAT ON CACHE BOOL "" FORCE)
 	add_subdirectory(3rdparty/ReGameDLL_CS)
