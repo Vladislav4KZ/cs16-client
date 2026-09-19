@@ -145,7 +145,7 @@ jobs:
       - name: Setup sccache
         uses: mozilla-actions/sccache-action@v0.0.11
       - name: Configure
-        run: cmake -DCMAKE_POLICY_DEFAULT_CMP0141=NEW --preset "win32-ci-${{ matrix.arch }}"
+        run: cmake -DCMAKE_POLICY_DEFAULT_CMP0141=NEW -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded --preset "win32-ci-${{ matrix.arch }}"
       - name: Build and Package
         run: |
           cmake --build .
