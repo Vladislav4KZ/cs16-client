@@ -75,10 +75,12 @@ if(BUILD_SERVER)
 	add_subdirectory(3rdparty/yapb)
 
 	if(MSVC)
-        # Must be applied after YaPB's own compiler options.
-        target_compile_options(yapb PRIVATE
-            /FS
-        )
+        # YaPB uses one shared compiler PDB. Compile its sources serially.
+        set_property(GLOBAL APPEND PROPERTY JOB_POOLS yapb_compile_pool=1)
+        set_property(TARGET yapb PROPERTY JOB_POOL_COMPILE yapb_compile_pool)
+
+        # Keep this as an additional safeguard.
+        target_compile_options(yapb PRIVATE /FS)
     endif()
 
     set_target_postfix(yapb)
