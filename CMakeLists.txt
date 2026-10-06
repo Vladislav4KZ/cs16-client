@@ -67,6 +67,11 @@ if(BUILD_SERVER)
 	# 	BUILD_IN_SOURCE 1
 	# 	INSTALL_COMMAND meson install -C build --destdir ${CMAKE_INSTALL_PREFIX}
 	# )
+	if(XASH_64BIT)
+		set(YAPB_64BIT ON CACHE BOOL "Build as 64-bit binary" FORCE)
+	else()
+		set(YAPB_64BIT OFF CACHE BOOL "Build as 64-bit binary" FORCE)
+	endif()
 	add_subdirectory(3rdparty/yapb)
 
 	if(MSVC)
