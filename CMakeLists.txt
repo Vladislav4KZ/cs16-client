@@ -58,15 +58,12 @@ endif()
 # endif()
 
 if(BUILD_SERVER)
-	# ExternalProject_Add(
-	# 	yapb
-	# 	SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/yapb
-	# 	CONFIGURE_COMMAND meson setup --buildtype ${MESON_BUILD_TYPE} build
-	# 	BUILD_COMMAND meson compile -C build
-	# 	BUILD_ALWAYS 1
-	# 	BUILD_IN_SOURCE 1
-	# 	INSTALL_COMMAND meson install -C build --destdir ${CMAKE_INSTALL_PREFIX}
-	# )
+	# YaPB must use the same architecture as CS16Client.
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(YAPB_64BIT ON CACHE BOOL "Build YaPB as 64-bit binary" FORCE)
+    else()
+        set(YAPB_64BIT OFF CACHE BOOL "Build YaPB as 64-bit binary" FORCE)
+    endif()
 	add_subdirectory(3rdparty/yapb)
 
 	if(MSVC)
